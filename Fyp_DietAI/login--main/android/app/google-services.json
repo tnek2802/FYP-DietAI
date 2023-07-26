@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1008565752899",
+    "project_id": "dietai-612a7",
+    "storage_bucket": "dietai-612a7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1008565752899:android:7cbd5f689cbfc7cf6d30f6",
+        "android_client_info": {
+          "package_name": "com.instaflutter.free_login_screen"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1008565752899-9u5qgsh5t208j8v75k3noe88cilm5coj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTH8WSsTgC1o8Ul8u4XAgMiIEgrrJvPIc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1008565752899-9u5qgsh5t208j8v75k3noe88cilm5coj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
