@@ -24,7 +24,7 @@ class _SignUpState extends State<SignUpScreen> {
   Uint8List? _imageData;
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _key = GlobalKey();
-  String? firstName, lastName, email, password, confirmPassword;
+  String? firstName, lastName, email, password, confirmPassword, age, weight, height, gender, medicalHistory, foodPreferences;
   AutovalidateMode _validate = AutovalidateMode.disabled;
   bool acceptEULA = false;
 
@@ -65,7 +65,13 @@ class _SignUpState extends State<SignUpScreen> {
                             password: password!,
                             imageData: _imageData,
                             lastName: lastName,
-                            firstName: firstName));
+                            firstName: firstName,
+                            age: age,
+                            weight: weight,
+                            height: height,
+                            gender: gender,
+                            medicalHistory: medicalHistory,
+                            foodPreferences: foodPreferences));
                   } else if (state is SignUpFailureState) {
                     showSnackBar(context, state.errorMessage);
                   }
@@ -203,6 +209,102 @@ class _SignUpState extends State<SignUpScreen> {
                             padding: const EdgeInsets.only(
                                 top: 16.0, right: 8.0, left: 8.0),
                             child: TextFormField(
+                              textCapitalization: TextCapitalization.words,
+                              // validator: validateName,
+                              onSaved: (String? val) {
+                                age = val;
+                              },
+                              textInputAction: TextInputAction.next,
+                              decoration: getInputDecoration(
+                                  hint: 'Age',
+                                  darkMode: isDarkMode(context),
+                                  errorColor: Theme.of(context).errorColor),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 16.0, right: 8.0, left: 8.0),
+                            child: TextFormField(
+                              textCapitalization: TextCapitalization.words,
+                              // validator: validateName,
+                              onSaved: (String? val) {
+                                weight = val;
+                              },
+                              textInputAction: TextInputAction.next,
+                              decoration: getInputDecoration(
+                                  hint: 'Weight (Kg)',
+                                  darkMode: isDarkMode(context),
+                                  errorColor: Theme.of(context).errorColor),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 16.0, right: 8.0, left: 8.0),
+                            child: TextFormField(
+                              textCapitalization: TextCapitalization.words,
+                              // validator: validateName,
+                              onSaved: (String? val) {
+                                height = val;
+                              },
+                              textInputAction: TextInputAction.next,
+                              decoration: getInputDecoration(
+                                  hint: 'Height (cm)',
+                                  darkMode: isDarkMode(context),
+                                  errorColor: Theme.of(context).errorColor),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 16.0, right: 8.0, left: 8.0),
+                            child: TextFormField(
+                              textCapitalization: TextCapitalization.words,
+                              // validator: validateName,
+                              onSaved: (String? val) {
+                                gender = val;
+                              },
+                              textInputAction: TextInputAction.next,
+                              decoration: getInputDecoration(
+                                  hint: 'Gender',
+                                  darkMode: isDarkMode(context),
+                                  errorColor: Theme.of(context).errorColor),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 16.0, right: 8.0, left: 8.0),
+                            child: TextFormField(
+                              textCapitalization: TextCapitalization.words,
+                              // validator: validateName,
+                              onSaved: (String? val) {
+                                medicalHistory = val;
+                              },
+                              textInputAction: TextInputAction.next,
+                              decoration: getInputDecoration(
+                                  hint: 'Medical History',
+                                  darkMode: isDarkMode(context),
+                                  errorColor: Theme.of(context).errorColor),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 16.0, right: 8.0, left: 8.0),
+                            child: TextFormField(
+                              textCapitalization: TextCapitalization.words,
+                              // validator: validateName,
+                              onSaved: (String? val) {
+                                foodPreferences = val;
+                              },
+                              textInputAction: TextInputAction.next,
+                              decoration: getInputDecoration(
+                                  hint: 'Food Preferences',
+                                  darkMode: isDarkMode(context),
+                                  errorColor: Theme.of(context).errorColor),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 16.0, right: 8.0, left: 8.0),
+                            child: TextFormField(
                               keyboardType: TextInputType.emailAddress,
                               textInputAction: TextInputAction.next,
                               validator: validateEmail,
@@ -260,6 +362,7 @@ class _SignUpState extends State<SignUpScreen> {
                                   errorColor: Theme.of(context).errorColor),
                             ),
                           ),
+
                           Padding(
                             padding: const EdgeInsets.only(
                                 right: 40.0, left: 40.0, top: 40.0),

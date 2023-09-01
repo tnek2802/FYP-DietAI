@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-// import 'package:flutter_login_screen/ui/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_login_screen/model/ResponseModel.dart';
@@ -71,7 +70,7 @@ final response = await http.post(
       "messages": [
         {
           "role": "system",
-          "content": "You are a helpful assistant.", // Add a system message to set the behavior of the assistant
+          "content": "You are a helpful diet consultant.", // Add a system message to set the behavior of the assistant
         },
         {
           "role": "user",

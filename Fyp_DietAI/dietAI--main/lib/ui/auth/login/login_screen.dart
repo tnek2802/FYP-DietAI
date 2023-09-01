@@ -189,18 +189,18 @@ class _LoginScreen extends State<LoginScreen> {
                                 .add(ValidateLoginFieldsEvent(_key)),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(32.0),
-                          child: Center(
-                            child: Text(
-                              'OR',
-                              style: TextStyle(
-                                  color: isDarkMode(context)
-                                      ? Colors.white
-                                      : Colors.black),
-                            ),
-                          ),
-                        ),
+                        // Padding(
+                        //   padding: const EdgeInsets.all(32.0),
+                        //   child: Center(
+                        //     child: Text(
+                        //       'OR',
+                        //       style: TextStyle(
+                        //           color: isDarkMode(context)
+                        //               ? Colors.white
+                        //               : Colors.black),
+                        //     ),
+                        //   ),
+                        // ),
                         // Padding(
                         //   padding: const EdgeInsets.only(
                         //       right: 40.0, left: 40.0, bottom: 20),

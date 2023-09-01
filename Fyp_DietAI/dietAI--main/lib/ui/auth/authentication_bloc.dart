@@ -104,7 +104,13 @@ class AuthenticationBloc
           password: event.password,
           imageData: event.imageData,
           firstName: event.firstName,
-          lastName: event.lastName);
+          lastName: event.lastName,
+          age: event.age,
+          weight: event.weight,
+          height: event.height,
+          gender: event.gender,
+          medicalHistory: event.medicalHistory,
+          foodPreferences: event.foodPreferences);
       if (result != null && result is User) {
         user = result;
         emit(AuthenticationState.authenticated(user!));

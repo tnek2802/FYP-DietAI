@@ -137,9 +137,9 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
         widget.image is String
             ? Image.asset(
                 widget.image,
-                width: 150,
+                width: 250,
                 height: 150,
-                fit: BoxFit.cover,
+                fit: BoxFit.cover, 
               )
             : Icon(
                 widget.image as IconData,

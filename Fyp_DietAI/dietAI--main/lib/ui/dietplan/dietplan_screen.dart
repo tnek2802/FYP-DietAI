@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_login_screen/model/user.dart';
+import 'genDietPlan_screen.dart';
 
 class DietScreen extends StatelessWidget {
-  const DietScreen({super.key});
-
+  final User user;
+  const DietScreen({required this.user, Key? key}) : super(key: key);
+   
   @override
   Widget build(BuildContext context) {
     const appTitle = 'Diet Plan';
@@ -13,15 +16,17 @@ class DietScreen extends StatelessWidget {
         appBar: AppBar(
           title: const Text(appTitle),
         ),
-        body: const MyCustomForm(),
+        body:  MyCustomForm(user: user),
       ),
     );
   }
 }
 
 // Create a Form widget.
+// Create a Form widget.
 class MyCustomForm extends StatefulWidget {
-  const MyCustomForm({super.key});
+  final User user; // Add user property
+  MyCustomForm({required this.user, Key? key}) : super(key: key);
 
   @override
   MyCustomFormState createState() {
@@ -38,6 +43,7 @@ class MyCustomFormState extends State<MyCustomForm> {
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
+  String? _selectedOption;
 
   @override
   Widget build(BuildContext context) {
@@ -45,13 +51,35 @@ class MyCustomFormState extends State<MyCustomForm> {
     return Form(
       key: _formKey,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          TextFormField(
-            // The validator receives the text that the user has entered.
+          const Text(
+            '\nGenerate your personalized diet plan!\n\nSet your goal:\n\n',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,),
+            textAlign: TextAlign.center,
+          ),
+          
+          DropdownButtonFormField<String>(
+            value: _selectedOption,
+            onChanged: (String? newValue) {
+              setState(() {
+                _selectedOption = newValue;
+              });
+            },
+            items: <String>['Losing Weight', 'Maintaining Weight', 'Gaining Weight']
+                .map((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            decoration: const InputDecoration(
+              hintText: 'Select your goal', // Placeholder text for the field
+              labelText: 'Goal', // Label text for the field
+            ),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter some text';
+                return 'Please select an option';
               }
               return null;
             },
@@ -62,14 +90,18 @@ class MyCustomFormState extends State<MyCustomForm> {
               onPressed: () {
                 // Validate returns true if the form is valid, or false otherwise.
                 if (_formKey.currentState!.validate()) {
-                  // If the form is valid, display a snackbar. In the real world,
-                  // you'd often call a server or save the information in a database.
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Processing Data')),
+                  // Navigate to the GeneratedDietPlanScreen with the selected goal
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => GeneratedDietPlanScreen(selectedGoal: _selectedOption!, user: widget.user),
+                    ),
                   );
-                }
+                }                  
+
               },
-              child: const Text('Submit'),
+              child: const Text('Generate',
+              ),
             ),
           ),
         ],

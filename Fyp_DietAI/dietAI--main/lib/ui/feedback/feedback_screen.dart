@@ -1,148 +1,159 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_login_screen/model/feedback.dart';
 
-class FeedbackScreen extends StatelessWidget {
-  const FeedbackScreen({super.key});
-
+class FeedbackScreen extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    const appTitle = 'Feedback Form';
-
-    return MaterialApp(
-      title: appTitle,
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text(appTitle),
-        ),
-        body: const MyCustomForm(),
-      ),
-    );
-  }
+  _FeedbackScreenState createState() => _FeedbackScreenState();
 }
 
-// Create a Form widget.
-class MyCustomForm extends StatefulWidget {
-  const MyCustomForm({super.key});
-
-  @override
-  MyCustomFormState createState() {
-    return MyCustomFormState();
-  }
-}
-
-// Create a corresponding State class.
-// This class holds data related to the form.
-class MyCustomFormState extends State<MyCustomForm> {
-  // Create a global key that uniquely identifies the Form widget
-  // and allows validation of the form.
-  //
-  // Note: This is a GlobalKey<FormState>,
-  // not a GlobalKey<MyCustomFormState>.
+class _FeedbackScreenState extends State<FeedbackScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _subjectController = TextEditingController();
+  final _commentController = TextEditingController();
+  bool _isSubmitting = false;
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _subjectController.dispose();
+    _commentController.dispose();
+    super.dispose();
+  }
+  Future<bool> _checkEmailExists(String email) async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('feedback')
+        .where('email', isEqualTo: email)
+        .limit(1)
+        .get();
+
+    return querySnapshot.docs.isNotEmpty;
+  }
+
+  Future<void> _submitFeedback() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isSubmitting = true;
+      });
+
+      try {
+        final user = FirebaseAuth.instance.currentUser;
+        if (user != null) {
+          final feedbackData = {
+            'name': _nameController.text,
+            'email': _emailController.text,
+            'subject': _subjectController.text,
+            'comment': _commentController.text,
+          };
+
+          final emailExists = await _checkEmailExists(_emailController.text);
+          if (emailExists) {
+            _showErrorSnackBar('You have already submitted a form with this email.');
+          } else {
+            await FirebaseFirestore.instance.collection('feedback').add(feedbackData);
+            _showSuccessSnackBar('Feedback submitted successfully!');
+            _resetForm(); // Clear the form after successful submission
+          }
+        } else {
+          _showErrorSnackBar('You must be logged in to submit feedback.');
+        }
+      } catch (e) {
+        _showErrorSnackBar('An error occurred while submitting feedback.');
+      } finally {
+        setState(() {
+          _isSubmitting = false;
+        });
+      }
+    }
+  }
+
+  void _showSuccessSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    ).closed.then((_) {
+      _resetForm(); // Clear the form after the snackbar is closed
+    });
+  }
+
+  void _showErrorSnackBar(String errorMessage) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(errorMessage)),
+    );
+  }
+
+  void _resetForm() {
+    _formKey.currentState!.reset();
+    _nameController.clear();
+    _emailController.clear();
+    _subjectController.clear();
+    _commentController.clear();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Build a Form widget using the _formKey created above.
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            '\nName:',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    return Scaffold(
+      appBar: AppBar(title: Text('Feedback Form')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: [
+              TextFormField(
+                controller: _nameController,
+                decoration: InputDecoration(labelText: 'Name'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your name';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _emailController,
+                decoration: InputDecoration(labelText: 'Email'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your email';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _subjectController,
+                decoration: InputDecoration(labelText: 'Subject'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter the subject';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _commentController,
+                decoration: InputDecoration(labelText: 'Comment'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your comment';
+                  }
+                  return null;
+                },
+              ),
+              ElevatedButton(
+                onPressed: _isSubmitting ? null : _submitFeedback,
+                child: _isSubmitting
+                    ? CircularProgressIndicator()
+                    : const Text('Submit', style: TextStyle(fontSize: 18)),
+              ),
+            ],
           ),
-          TextFormField(
-            // The validator receives the text that the user has entered.
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your name!';
-              }
-              return null;
-            },
-            decoration: const InputDecoration(
-              hintText: 'Enter your name',
-              border: OutlineInputBorder(),
-              contentPadding: EdgeInsets.all(10),
-            ),
-          ),
-          const SizedBox(height: 12),
-          const Text(
-            '\nEmail:',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          TextFormField(
-            // The validator receives the text that the user has entered.
-            validator: (value1) {
-              if (value1 == null || value1.isEmpty) {
-                return 'Please enter your email!';
-              }
-              return null;
-            },
-            decoration: const InputDecoration(
-              hintText: 'Enter your email',
-              border: OutlineInputBorder(),
-              contentPadding: EdgeInsets.all(10),
-            ),
-          ),
-          const SizedBox(height: 12),
-          const Text(
-            '\nSubject:',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          TextFormField(
-            // The validator receives the text that the user has entered.
-            validator: (value2) {
-              if (value2 == null || value2.isEmpty) {
-                return 'Please enter your subject';
-              }
-              return null;
-            },
-            decoration: const InputDecoration(
-              hintText: 'Enter your subject',
-              border: OutlineInputBorder(),
-              contentPadding: EdgeInsets.all(10),
-            ),
-          ),
-          const SizedBox(height: 12),
-          const Text(
-            '\nComment:',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          TextFormField(
-            // The validator receives the text that the user has entered.
-            validator: (value3) {
-              if (value3 == null || value3.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
-            maxLines: 4,
-            decoration: const InputDecoration(
-              hintText: 'Enter your comment',
-              border: OutlineInputBorder(),
-              contentPadding: EdgeInsets.all(10),
-            ),
-          ),
-          const SizedBox(height: 24),
-          ElevatedButton(
-            onPressed: () {
-              // Validate returns true if the form is valid, or false otherwise.
-              if (_formKey.currentState!.validate()) {
-                // If the form is valid, display a snackbar. In the real world,
-                // you'd often call a server or save the information in a database.
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Processing Data')),
-                );
-              }
-            },
-            child: const Text(
-              'Submit',
-              style: TextStyle(fontSize: 18),
-            ),
-          ),
-        ],
+        ),
       ),
     );
-
   }
 }
+

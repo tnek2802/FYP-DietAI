@@ -3,7 +3,7 @@
 
     <application
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/dietai_1"
         android:label="free_login">
         <activity
             android:name=".MainActivity"

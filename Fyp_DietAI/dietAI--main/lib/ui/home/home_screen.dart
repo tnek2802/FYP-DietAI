@@ -22,16 +22,22 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeState extends State<HomeScreen> {
-  late User user;
-
   int selectedPage = 0;
-  final List _screens=[ProgressScreen(), const DietScreen(), const FeedbackScreen(), const ChatScreen()];
-
+  late final List<Widget> _screens;
+  late User user;
   @override
   void initState() {
     super.initState();
-    user = widget.user;
+     _screens = [
+      ProgressScreen(user: widget.user), // Use widget.user here
+      DietScreen(user: widget.user),
+      FeedbackScreen(),
+      const ChatScreen(),
+    ];   
   }
+  // final List _screens=[ProgressScreen(user: user), const DietScreen(), FeedbackScreen(), const ChatScreen()];
+
+
 
 
   @override
@@ -80,7 +86,7 @@ return DefaultTabController(
                 ),
 
                 onTap: () { Navigator.push(context,
-                MaterialPageRoute(builder: (context) => ProfileScreen()));
+                MaterialPageRoute(builder: (context) => ProfileScreen(user: widget.user)));
                 },               
               ),
               ListTile(

@@ -149,7 +149,13 @@ class FireStoreUtils {
       required String password,
       Uint8List? imageData,
       firstName = 'Anonymous',
-      lastName = 'User'}) async {
+      lastName = 'User',
+      String? age,
+      String? weight,
+      String? height,
+      String? gender,
+      String? medicalHistory,
+      String? foodPreferences}) async {
     try {
       auth.UserCredential result = await auth.FirebaseAuth.instance
           .createUserWithEmailAndPassword(
@@ -165,7 +171,13 @@ class FireStoreUtils {
           firstName: firstName,
           userID: result.user?.uid ?? '',
           lastName: lastName,
-          profilePictureURL: profilePicUrl);
+          profilePictureURL: profilePicUrl,
+          age: 18,
+          weight: 50,
+          height: 170,
+          gender: "",
+          medicalHistory: "",
+          foodPreferences: "");
       String? errorMessage = await createNewUser(user);
       if (errorMessage == null) {
         return user;
@@ -219,6 +231,12 @@ class FireStoreUtils {
     String? firstName = 'Anonymous',
     String? lastName = 'User',
     Uint8List? imageData,
+    String? age = '18',
+    String? weight = '50kg',
+    String? height = '170cm',
+    String? gender = 'Male',
+    String? medicalHistory = 'None',
+    String? foodPreferences = 'Vegetarian',
   }) async {
     auth.UserCredential userCredential =
         await auth.FirebaseAuth.instance.signInWithCredential(credential);
@@ -237,6 +255,7 @@ class FireStoreUtils {
               firstName!.trim().isNotEmpty ? firstName.trim() : 'Anonymous',
           lastName: lastName!.trim().isNotEmpty ? lastName.trim() : 'User',
           email: '',
+          age: 18,
           profilePictureURL: profileImageUrl,
           userID: userCredential.user?.uid ?? '');
       String? errorMessage = await createNewUser(user);

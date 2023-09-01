@@ -29,7 +29,7 @@ dependencies:
 
   flutter:
     sdk: flutter
-
+  intl: ^0.17.0  # Use the latest version of intl package
 
   cupertino_icons: ^1.0.5
   charts_flutter: ^0.12.0
@@ -40,10 +40,10 @@ dev_dependencies:
   flutter_lints: ^2.0.1
 
 flutter_icons:
-  android: false
+  android: true
   ios: true
   remove_alpha_ios: true
-  image_path: android/app/src/main/ic_launcher-playstore.png
+  image_path: 'assets/images/dietAI-4.png'
 
 flutter:
   uses-material-design: true
